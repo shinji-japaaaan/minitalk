@@ -65,6 +65,8 @@ int main(int argc, char **argv)
     sa.sa_handler = handle_ack;
     sa.sa_flags = SA_RESTART;
     sigemptyset(&sa.sa_mask);
+    sigaddset(&sa.sa_mask, SIGUSR1);
+	sigaddset(&sa.sa_mask, SIGUSR2);
     if (sigaction(SIGUSR1, &sa, NULL) == -1)
     {
         ft_putstr_fd("error", 1);
