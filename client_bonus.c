@@ -15,13 +15,19 @@
 #include <stdlib.h>
 #include "libft/libft.h"
 
-volatile sig_atomic_t g_ack_received = 0;
-
 void    handle_ack(int sig)
 {
-    (void)sig;
-    g_ack_received = 1;
-    ft_putstr_fd("received\n", 1);
+    static int	count = 0;
+
+	if (sig == SIGUSR1)
+		++count;
+	else
+	{
+		ft_putstr_fd("received:", 1);
+        ft_putnbr_fd(count, 1);
+		ft_putstr_fd("文字\n", 1);
+		exit(0);
+	}
 }
 
 void    send_char(int server_pid, char c)
@@ -59,19 +65,22 @@ int main(int argc, char **argv)
         ft_putstr_fd("Usage: client [server_pid] [message]\n", 1);
         return (1);
     }
+    ft_putstr_fd("sent message:", 1);
+    ft_putnbr_fd(ft_strlen(argv[2]), 1);
+    ft_putstr_fd("文字\n", 1);
     server_pid = ft_atoi(argv[1]);
-    const char  *message = argv[2];
     struct sigaction sa;
     sa.sa_handler = handle_ack;
     sa.sa_flags = SA_RESTART;
     sigemptyset(&sa.sa_mask);
-    if (sigaction(SIGUSR1, &sa, NULL) == -1)
+    sigaddset(&sa.sa_mask, SIGUSR1),sigaddset(&sa.sa_mask, SIGUSR2);
+    if (sigaction(SIGUSR1, &sa, NULL) == -1 || sigaction(SIGUSR2, &sa, NULL) == -1)
     {
         ft_putstr_fd("error", 1);
         exit(EXIT_FAILURE);
     }
-    send_str(server_pid, message);
-    while (!g_ack_received)
+    send_str(server_pid, argv[2]);
+    while (1)
         pause();
     return (0);
 }

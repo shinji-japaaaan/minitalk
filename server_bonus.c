@@ -31,10 +31,13 @@ void    handle_signal(int sig, siginfo_t *info, void *context)
        if (c == '\0')
        {
             ft_putstr_fd("\n", 1);
-            kill(g_client_pid, SIGUSR1);
+            kill(g_client_pid, SIGUSR2);
        }    
         else
-            ft_putstr_fd(&c, 1);
+        {
+            ft_putchar_fd(c, 1);
+            kill(g_client_pid, SIGUSR1);    
+        }
         c = 0;
         bits = 0;
     }
@@ -51,6 +54,8 @@ int main(void)
     sa.sa_sigaction = handle_signal;
     sa.sa_flags = SA_SIGINFO | SA_RESTART;
     sigemptyset(&sa.sa_mask);
+    sigaddset(&sa.sa_mask, SIGUSR1);
+	sigaddset(&sa.sa_mask, SIGUSR2);
     if (sigaction(SIGUSR1, &sa, NULL) == -1 || sigaction(SIGUSR2, &sa, NULL) == -1)
     {
         ft_putstr_fd("error", 1);
