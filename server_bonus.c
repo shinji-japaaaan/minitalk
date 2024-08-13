@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sishizaw <sishizaw@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: sishizaw <sishizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/27 11:03:59 by sishizaw              #+#    #+#             */
-/*   Updated: 2024/06/27 11:03:59 by sishizaw             ###   ########.fr       */
+/*   Created: 2024/08/13 15:28:10 by sishizaw          #+#    #+#             */
+/*   Updated: 2024/08/13 15:28:12 by sishizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,13 @@ void    handle_signal(int sig, siginfo_t *info, void *context)
     {
        if (c == '\0')
        {
-            ft_putstr_fd("\n", 1);
+            ft_putchar_fd('\n', 1);
             kill(g_client_pid, SIGUSR2);
        }    
         else
         {
             ft_putchar_fd(c, 1);
-            kill(g_client_pid, SIGUSR1);    
+            kill(g_client_pid, SIGUSR1);
         }
         c = 0;
         bits = 0;
@@ -62,8 +62,6 @@ int main(void)
         exit(EXIT_FAILURE);
     }
     while (1)
-    {
         pause();
-    }
     return (0);
 }

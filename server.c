@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sishizaw <sishizaw@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: sishizaw <sishizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/25 17:56:15 by sishizaw              #+#    #+#             */
-/*   Updated: 2024/06/25 17:56:15 by sishizaw             ###   ########.fr       */
+/*   Created: 2024/08/11 17:39:22 by sishizaw          #+#    #+#             */
+/*   Updated: 2024/08/13 11:13:55 by sishizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ void    handle_signal(int sig)
     if (bits == 8)
     {
         if (c == '\0')
-            ft_putstr_fd("\n", 1);
+            ft_putchar_fd('\n', 1);
         else
-            ft_putstr_fd(&c, 1);
+            ft_putchar_fd(c, 1);
         c = 0;
         bits = 0;
     }

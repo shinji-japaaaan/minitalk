@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sishizaw <sishizaw@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: sishizaw <sishizaw@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/27 10:43:44 by sishizaw              #+#    #+#             */
-/*   Updated: 2024/06/27 10:43:44 by sishizaw             ###   ########.fr       */
+/*   Created: 2024/08/12 18:50:56 by sishizaw          #+#    #+#             */
+/*   Updated: 2024/08/13 11:46:33 by sishizaw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,29 @@
 #include <unistd.h>
 #include <stdlib.h>
 #include "libft/libft.h"
+
+void display_error(void)
+{
+    ft_putstr_fd("ERROR\n", 1);
+    exit(1);
+}
+
+void    argv1_check(char **argv, long pid)
+{
+	int i;
+
+    i = 0;
+	while (argv[1][i] != '\0')
+	{
+		if (argv[1][i] < '0' || '9' < argv[1][i])
+            display_error();
+		i++;
+	}
+    if (pid > 2147483647)
+		display_error();
+	if (pid <= 1)
+		display_error();
+}
 
 void    handle_ack(int sig)
 {
@@ -30,46 +53,45 @@ void    handle_ack(int sig)
 	}
 }
 
-void    send_char(int server_pid, char c)
+void    send_message(int pid, char *str)
 {
     int i;
 
     i = 0;
-    while (i < 8)
-    {
-        if (c & (1 << i))
-            kill(server_pid, SIGUSR1);
-        else
-            kill(server_pid, SIGUSR2);
-        i++;
-        usleep(100);
-    }
-}
-
-void    send_str(int server_pid, const char *str)
-{
     while (*str)
     {
-        send_char(server_pid, *str);
+        while (i < 8)
+        {
+            if (*str & (1 << i))
+                kill(pid, SIGUSR1);
+            else
+                kill(pid, SIGUSR2);
+            i++;
+            usleep(250);
+        }
         str++;
+        i = 0;
     }
-    send_char(server_pid, '\0');
+    while (i < 8)
+    {
+        kill(pid, SIGUSR2);
+        usleep(250);
+        i++;
+    }
 }
 
 int main(int argc, char **argv)
 {
-    int server_pid;
-
-    if (argc != 3)
-    {
-        ft_putstr_fd("Usage: client [server_pid] [message]\n", 1);
-        return (1);
-    }
-    ft_putstr_fd("sent message:", 1);
-    ft_putnbr_fd(ft_strlen(argv[2]), 1);
-    ft_putstr_fd("文字\n", 1);
-    server_pid = ft_atoi(argv[1]);
+    long pid;
     struct sigaction sa;
+
+    if (argc != 3 || argv[2][0] == '\0')
+    {
+        display_error();
+    }
+	pid = (long)ft_atoi(argv[1]);
+	argv1_check(argv, pid);
+
     sa.sa_handler = handle_ack;
     sa.sa_flags = SA_RESTART;
     sigemptyset(&sa.sa_mask);
@@ -79,7 +101,7 @@ int main(int argc, char **argv)
         ft_putstr_fd("error", 1);
         exit(EXIT_FAILURE);
     }
-    send_str(server_pid, argv[2]);
+    send_message(pid, argv[2]);
     while (1)
         pause();
     return (0);
