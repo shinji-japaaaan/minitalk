@@ -6,7 +6,7 @@
 #    By: sishizaw <sishizaw@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/13 15:27:55 by sishizaw          #+#    #+#              #
-#    Updated: 2024/08/13 15:27:58 by sishizaw         ###   ########.fr        #
+#    Updated: 2024/08/18 11:11:15 by sishizaw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ NAME_CLIENT_BONUS = client_bonus
 NAME_SERVER_BONUS = server_bonus
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror 
+CFLAGS = -Wall -Wextra -Werror
 LIBFT = ./libft/libft.a
 
 SRC_CLIENT = client.c
